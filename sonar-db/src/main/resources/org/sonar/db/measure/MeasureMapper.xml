@@ -95,7 +95,7 @@
 
   <select id="selectTreeByQuery" parameterType="map" resultType="Measure">
     select <include refid="measureColumns"/> from project_measures pm
-    inner join snapshots analysis on analysis.uuid = pm.analysis_uuid
+    inner join snapshots analysis on analysis.uuid = pm.analysis_uuid and analysis.islast=${_true}
     inner join projects p on p.project_uuid=analysis.component_uuid and p.uuid=pm.component_uuid
     <include refid="org.sonar.db.component.ComponentMapper.selectDescendantsJoins"/>
     <where>
@@ -104,7 +104,7 @@
     -- Add measures of base component
     union all
     select <include refid="measureColumns"/> from project_measures pm
-    inner join snapshots analysis on analysis.uuid = pm.analysis_uuid
+    inner join snapshots analysis on analysis.uuid = pm.analysis_uuid and analysis.islast=${_true}
     inner join projects p on p.project_uuid=analysis.component_uuid and p.uuid=pm.component_uuid and pm.component_uuid=#{baseUuid}
     <where>
       <include refid="selectTreeByQueryFilters"/>
